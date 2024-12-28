@@ -1,14 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
+
+@inject NavigationManager NavigationManager
+
 <div class="page">
-    <div class="sidebar">
-        <NavMenu/>
+    @* <div class="sidebar"> *@
+    @*     <NavMenu/> *@
+    @* </div> *@
+    
+    <div class="left-sidebar">
+        <nav class="">
+            <h5 class="px-3 py-3">STORE</h5>
+            <ul class="list-group">
+                <NavLink href="Orders" class="list-group-item">Orders</NavLink>
+                <NavLink href="Products" class="list-group-item">Products</NavLink>
+                <NavLink href="Clients" class="list-group-item">Clients</NavLink>
+                <NavLink href="Employees" class="list-group-item">Employees</NavLink>
+                <NavLink class="list-group-item">Logout</NavLink>
+            </ul>
+        </nav>
     </div>
+    
+    <style>
+        
+        body {
+            background-color: #D9D9D9;
+            }
+        
+        .left-sidebar {
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+        
+        }
+        
+    </style>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        @* <div class="top-row px-4"> *@
+        @*     <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a> *@
+        @* </div> *@
 
         <article class="content px-4">
             @Body
@@ -21,3 +52,25 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+}
